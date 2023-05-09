@@ -10,26 +10,50 @@ class BooksController < ApplicationController
   
   def create
     
-    book=Book.new(book_params)
+    @book=Book.new(book_params)
     
-    book.save
+    if @book.save
+       flash[:notice] = "Book was successfully updated."
+      redirect_to book_path(@book.id)
+      
+    else
+      @books=Book.all
+  
+      
+      render :index
     
-    redirect_to '/top'
   end
+end
 
   def index
-    @books=Book.all
+    @books = Book.all
+    @book = Book.new
   end
 
   def show
-    @books=Book.find(params{:id})
+    @books=Book.find(params[:id])
   end
 
   def edit
+     @books=Book.find(params[:id])
   end
   
+   def update
+    book = Book.find(params[:id])
+    book.update(book_params)
+    flash[:notice] = "Book was successfully updated."
+        redirect_to "/books/#{book.id}"
+
+  end
+  
+   def destroy
+       book = Book.find(params[:id])
+        book.destroy
+        redirect_to '/books'
+     end
+     
   private
   def book_params
-    params.require(:book).permit(:title,:body)
+    params.require(:book).permit(:title, :body)
   end
 end
