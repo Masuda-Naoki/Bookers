@@ -35,16 +35,23 @@ end
   end
 
   def edit
-     @books=Book.find(params[:id])
+     @book=Book.find(params[:id])
   end
   
    def update
-    book = Book.find(params[:id])
-    book.update(book_params)
-    flash[:notice] = "Book was successfully updated."
-        redirect_to "/books/#{book.id}"
-
+    @book = Book.find(params[:id])
+    @book.update(book_params)
+    if @book.save
+    flash[:notice] = "You have creatad book successfully."
+    redirect_to edit_book_path(@book.id)
+     else
+      @books=Book.all
+  
+      
+      render :edit
+    
   end
+end
   
    def destroy
        book = Book.find(params[:id])
